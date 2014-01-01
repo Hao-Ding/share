@@ -87,8 +87,30 @@ set mouse=a
 set selection=exclusive
 set selectmode=mouse,key
 
+" abbreviate #include to #i
+ab #i #include
 
-"" --define function SetTitle, insert the headers automatically--
+" map choose-all to Ctrl+a
+map <C-a> ggvG
+map <F12> gg=G
+
+"" --define function SetTitleforHead, insert the information automatically--
+autocmd BufNewFile *.{h,hpp,H} exec ":call SetTitleforHead()"
+func SetTitleforHead()
+	call append(0, "/********************************************************") 
+    call append(1, " * Author		: Hao Ding") 
+    call append(2, " * Email		: dinghao_nwpu@hotmail.com") 
+    call append(3, " * Created Time	: ".strftime("%c"))  
+    call append(4, " * Filename		: ".expand("%")) 
+    call append(5, " * Description	: ") 
+    call append(6, " * ******************************************************/") 
+	call append(7, "#ifndef _".substitute(toupper(expand("%")), "\\.", "_", "g"))
+	call append(8, "#define _".substitute(toupper(expand("%")), "\\.", "_", "g"))
+	call append(9, "#endif // _".substitute(toupper(expand("%")), "\\.", "_", "g"))
+	normal Gkko
+endfunc
+
+"" --define function SetTitle, insert the information  automatically--
 autocmd BufNewFile *.c,*.py,*.cpp,*.sh,*.java exec ":call SetTitle()"
 func SetTitle() 
 	if &filetype == 'sh'
